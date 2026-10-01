@@ -42,15 +42,17 @@ h1{font-size:clamp(1.8rem,5vw,2.8rem);margin:0 0 6px}
 .pop img{width:100%;max-height:62vh;object-fit:contain;border-radius:8px;display:block}
 .pop .ph{border:3px dashed var(--bg);border-radius:8px;padding:50px 14px;font-size:.9rem}
 .pop .btn{margin-top:12px;background:var(--bg);color:#fff}
+.mu{background:transparent;border:2px solid #fff6;color:#fff;border-radius:6px;font-size:1.1rem;padding:2px 10px;cursor:pointer;margin-left:auto;margin-right:12px}
+.mu:focus-visible{outline:3px solid #fff}
 @media (max-width:560px){.grid{grid-template-columns:1fr}.ans{min-height:64px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<div class="top"><span id="info">Quiz</span><b id="pts">0</b></div>
+<div class="top"><span id="info">Quiz</span><button class="mu" id="mu" type="button" aria-label="Silenciar música">🔊</button><b id="pts">0</b></div>
 <div class="timer hide" id="tm"><i id="bar"></i></div>
 <main id="app"></main>
-<footer class="yape hide" id="ap"><h2>¡Apóyame XD!</h2><img src="yape.jpeg" alt="QR de Yape para apoyar" onerror="this.outerHTML='<div class=ph>Coloca tu QR como yape.png junto a este archivo</div>'"></footer>
+<footer class="yape hide" id="ap"><h2>¡Apóyame XD!</h2><img src="yape.png" alt="QR de Yape para apoyar" onerror="this.outerHTML='<div class=ph>Coloca tu QR como yape.png junto a este archivo</div>'"></footer>
 <div class="pop" id="pop" role="dialog" aria-modal="true" aria-label="Bienvenida"><div><img src="bts.jpg" alt="Imagen de bienvenida" onerror="this.outerHTML='<p class=ph>Coloca tu imagen como bts.jpg junto a este archivo</p>'"><button class="btn" id="px">Empezar</button></div></div>
 <script>
 const P=[
@@ -107,7 +109,7 @@ let cur,qs,i,score,right,t0,iv,nx,locked;
 const C=["var(--r)","var(--b)","var(--y)","var(--g)"];
 function menu(){
   clearInterval(iv);clearTimeout(nx);tm.classList.add("hide");ap.classList.remove("hide");info.textContent="Quiz";pts.textContent="0";
-  app.innerHTML=`<div class="center"><h1>Quiz Parcial :)</h1><p>Elige una práctica. Una pregunta a la vez, sin límite de tiempo.</p><div class="menu">`+
+  app.innerHTML=`<div class="center"><h1>Tecnología y Educación</h1><p>Elige una práctica. Una pregunta a la vez, sin límite de tiempo.</p><div class="menu">`+
   P.map((p,k)=>`<button style="background:${C[k%4]}" data-k="${k}">${SH[k%4]} ${p[0]} · ${p[1].length} preguntas</button>`).join("")+`</div></div>`;
   app.querySelectorAll("button").forEach(b=>b.onclick=()=>start(+b.dataset.k));
 }
@@ -140,8 +142,17 @@ function end(){
   app.innerHTML=`<div class="center"><h1>${pc>=70?"¡Bien hecho!":"Sigue practicando"}</h1><div class="big">${right}/${qs.length}</div><p>${pc}% de aciertos · ${score} puntos</p><div class="menu"><button style="background:var(--g)" id="re">Repetir esta práctica</button><button style="background:var(--b)" id="mn">Elegir otra práctica</button></div></div>`;
   document.getElementById("re").onclick=()=>start(cur);document.getElementById("mn").onclick=menu;
 }
+let ac,sy,step=0,started=false,muted=false,mus,synthOn=false;
+const MEL=[523,659,784,659,880,784,659,587,523,659,784,1047,880,784,659,587],BAJ=[131,131,196,196,175,175,196,196];
+function note(f,t,d,ty,v){const o=ac.createOscillator(),g=ac.createGain();o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d)}
+function synth(){if(synthOn)return;synthOn=true;try{ac=new (window.AudioContext||window.webkitAudioContext)();sy=setInterval(()=>{if(muted)return;const t=ac.currentTime;note(MEL[step%16],t,.22,"triangle",.07);if(step%2===0)note(BAJ[(step>>1)%8],t,.3,"square",.03);step++},230)}catch(e){}}
+function startMusic(){if(started)return;started=true;
+  mus=new Audio("musica.mp3");mus.loop=true;mus.volume=.35;
+  mus.addEventListener("error",synth);mus.play().catch(synth)}
+const mb=document.getElementById("mu");
+mb.onclick=()=>{muted=!muted;if(mus)mus.muted=muted;mb.textContent=muted?"🔇":"🔊";mb.setAttribute("aria-label",muted?"Activar música":"Silenciar música")};
 const pop=document.getElementById("pop"),px=document.getElementById("px");
-const closePop=()=>pop.classList.add("hide");
+const closePop=()=>{pop.classList.add("hide");startMusic()};
 px.onclick=closePop;pop.onclick=e=>{if(e.target===pop)closePop()};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePop()});px.focus();
 menu();
