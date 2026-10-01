@@ -100,7 +100,7 @@ let cur,qs,i,score,right,t0,iv,nx,locked;
 const C=["var(--r)","var(--b)","var(--y)","var(--g)"];
 function menu(){
   clearInterval(iv);clearTimeout(nx);tm.classList.add("hide");ap.classList.remove("hide");info.textContent="Quiz";pts.textContent="0";
-  app.innerHTML=`<div class="center"><h1>Quiz: Parcial Plataformas :) </h1><p>Elige una práctica. Una pregunta a la vez, sin límite de tiempo.</p><div class="menu">`+
+  app.innerHTML=`<div class="center"><h1>Quiz: Parcial :) </h1><p>Elige una práctica. Una pregunta a la vez, sin límite de tiempo.</p><div class="menu">`+
   P.map((p,k)=>`<button style="background:${C[k%4]}" data-k="${k}">${SH[k%4]} ${p[0]} · ${p[1].length} preguntas</button>`).join("")+`</div></div>`;
   app.querySelectorAll("button").forEach(b=>b.onclick=()=>start(+b.dataset.k));
 }
