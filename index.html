@@ -32,10 +32,6 @@ h1{font-size:clamp(1.8rem,5vw,2.8rem);margin:0 0 6px}
 .menu button{padding:18px;border:0;border-radius:8px;font:inherit;font-size:1.1rem;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 5px 0 #0004}
 .big{font-size:3.4rem;margin:10px 0}
 .hide{display:none!important}
-.yape{text-align:center;padding:18px 16px 26px;background:var(--bg2)}
-.yape h2{margin:0 0 10px;font-size:1.3rem}
-.yape img{width:170px;height:170px;object-fit:contain;background:#fff;border-radius:12px;padding:8px}
-.yape .ph{width:170px;height:170px;margin:0 auto;border:3px dashed #fff8;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.85rem;padding:10px}
 .pop{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
 .pop.hide{display:none}
 .pop div{position:relative;background:#fff;color:var(--bg2);border-radius:14px;padding:14px;max-width:460px;width:100%;text-align:center}
@@ -52,6 +48,7 @@ h1{font-size:clamp(1.8rem,5vw,2.8rem);margin:0 0 6px}
 <div class="top"><span id="info">Quiz</span><button class="mu" id="mu" type="button" aria-label="Silenciar música">🔊</button><b id="pts">0</b></div>
 <div class="timer hide" id="tm"><i id="bar"></i></div>
 <main id="app"></main>
+<div class="pop" id="pop" role="dialog" aria-modal="true" aria-label="Bienvenida"><div><img src="bts.jpg" alt="Imagen de bienvenida" onerror="this.outerHTML='<p class=ph>Coloca tu imagen como bts.jpg junto a este archivo</p>'"><button class="btn" id="px">Empezar</button></div></div>
 <script>
 const P=[
 ["Práctica 1",[
@@ -102,18 +99,18 @@ const P=[
 ];
 function mix(q){const c=q[1][q[2]];for(let k=q[1].length-1;k>0;k--){const r=Math.floor(Math.random()*(k+1));[q[1][k],q[1][r]]=[q[1][r],q[1][k]]}q[2]=q[1].indexOf(c)}
 const SH=["▲","◆","●","■"],SEC=20,AUTO=2600;
-const ap=document.getElementById("ap"),app=document.getElementById("app"),info=document.getElementById("info"),pts=document.getElementById("pts"),tm=document.getElementById("tm"),bar=document.getElementById("bar");
+const app=document.getElementById("app"),info=document.getElementById("info"),pts=document.getElementById("pts"),tm=document.getElementById("tm"),bar=document.getElementById("bar");
 let cur,qs,i,score,right,t0,iv,nx,locked;
 const C=["var(--r)","var(--b)","var(--y)","var(--g)"];
 function menu(){
-  clearInterval(iv);clearTimeout(nx);tm.classList.add("hide");ap.classList.remove("hide");info.textContent="Quiz";pts.textContent="0";
-  app.innerHTML=`<div class="center"><h1>Quiz parcial :)</h1><p>Elige una práctica. Una pregunta a la vez, sin límite de tiempo.</p><div class="menu">`+
+  clearInterval(iv);clearTimeout(nx);tm.classList.add("hide");info.textContent="Quiz";pts.textContent="0";
+  app.innerHTML=`<div class="center"><h1>Quiz :)><p>Elige una práctica. Una pregunta a la vez, sin límite de tiempo.</p><div class="menu">`+
   P.map((p,k)=>`<button style="background:${C[k%4]}" data-k="${k}">${SH[k%4]} ${p[0]} · ${p[1].length} preguntas</button>`).join("")+`</div></div>`;
   app.querySelectorAll("button").forEach(b=>b.onclick=()=>start(+b.dataset.k));
 }
 function start(k){cur=k;qs=P[k][1];i=0;score=0;right=0;pts.textContent=0;show()}
 function show(){
-  const q=qs[i];mix(q);locked=false;ap.classList.add("hide");
+  const q=qs[i];mix(q);locked=false;
   info.textContent=`${P[cur][0]} · ${i+1}/${qs.length}`;
   app.innerHTML=`<div class="qbox" id="qb"></div><div class="grid">`+
    q[1].map((o,j)=>`<button class="ans a${j}" data-j="${j}"><span class="s">${SH[j]}</span><span>${o}</span></button>`).join("")+
@@ -135,7 +132,7 @@ function pick(j){
   nx=setTimeout(go,AUTO);
 }
 function end(){
-  tm.classList.add("hide");ap.classList.remove("hide");info.textContent=P[cur][0]+" · fin";
+  tm.classList.add("hide");info.textContent=P[cur][0]+" · fin";
   const pc=Math.round(right/qs.length*100);
   app.innerHTML=`<div class="center"><h1>${pc>=70?"¡Bien hecho!":"Sigue practicando"}</h1><div class="big">${right}/${qs.length}</div><p>${pc}% de aciertos · ${score} puntos</p><div class="menu"><button style="background:var(--g)" id="re">Repetir esta práctica</button><button style="background:var(--b)" id="mn">Elegir otra práctica</button></div></div>`;
   document.getElementById("re").onclick=()=>start(cur);document.getElementById("mn").onclick=menu;
