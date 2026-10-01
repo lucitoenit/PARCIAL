@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test: Tecnología y Educación</title>
+<style>
+:root{--bg:#eef2f4;--card:#fff;--ink:#15262e;--mute:#5b6d75;--line:#cfd9de;--acc:#0b6e74;--ok:#1e7a46;--okbg:#e2f3e9;--ko:#b3261e;--kobg:#fbe7e5}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1b20;--card:#16272e;--ink:#e6eef1;--mute:#98aab2;--line:#2a3f48;--acc:#4fc3c9;--ok:#6fd49a;--okbg:#14352399;--ko:#ff9a92;--kobg:#4a1d1a99}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Georgia,"Times New Roman",serif}
+main{max-width:760px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:1.7rem;margin:.2em 0 .1em}
+.sub{color:var(--mute);margin:0 0 20px;font-family:system-ui,sans-serif;font-size:.95rem}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;font-family:system-ui,sans-serif}
+.tabs button{flex:1 1 140px;padding:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;cursor:pointer;font-size:.95rem}
+.tabs button[aria-pressed=true]{background:var(--acc);color:#fff;border-color:var(--acc)}
+.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
+.q p{margin:0 0 12px;font-weight:600}
+label{display:block;padding:10px 12px;margin:6px 0;border:1px solid var(--line);border-radius:8px;cursor:pointer;font-family:system-ui,sans-serif;font-size:.95rem}
+label:hover{border-color:var(--acc)}
+input{margin-right:8px;accent-color:var(--acc)}
+.q.done label{cursor:default}
+label.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok);font-weight:600}
+label.ko{background:var(--kobg);border-color:var(--ko);color:var(--ko)}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-family:system-ui,sans-serif}
+.bar button{padding:12px 22px;border-radius:8px;border:0;font-size:1rem;cursor:pointer}
+#send{background:var(--acc);color:#fff}
+#reset{background:transparent;border:1px solid var(--line);color:var(--ink)}
+#res{font-weight:700;font-size:1.1rem}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+<h1>Test de práctica</h1>
+<p class="sub">Elige una práctica, responde y pulsa «Corregir».</p>
+<div class="tabs" id="tabs" role="group" aria-label="Prácticas"></div>
+<form id="quiz" onsubmit="return false"></form>
+<div class="bar">
+<button id="send" type="button">Corregir</button>
+<button id="reset" type="button">Reiniciar</button>
+<span id="res" aria-live="polite"></span>
+</div>
+</main>
+<script>
+// Formato: [pregunta, [opciones A-D], índice de la correcta (0=A)]
+const P=[
+["Práctica 1",[
+["¿En qué año Alan Turing diseñó y construyó el ordenador Colossus, una plataforma electromagnética fundamental para el desciframiento de códigos secretos durante la Segunda Guerra Mundial?",["1941","1943","1967","1971"],1],
+["¿Cuál fue el primer microprocesador de silicio comercializado en 1971, concebido para ejecutar operaciones bajo una arquitectura tipo Von Neumann?",["IBM System/360","Motorola 68000","Intel 4004","Zilog Z80"],2],
+["De forma paralela a la conexión de 23 ordenadores en la red ARPANET y la invención del disquete de 5.25 pulgadas en 1971, ¿qué servicio clave de comunicación digital se envió por primera vez?",["Una llamada de voz sobre protocolo IP","El primer correo electrónico","Un archivo de hipertexto indexado","Una señal de televisión digitalizada"],1],
+["¿Qué desarrollo de direccionamiento lógico de red fue introducido en el año 1983 para simplificar la identificación de los nodos conectados a la red global?",["El primer servidor de nombres de sitios (DNS)","El protocolo de conmutación por fibra óptica","El navegador web con interfaz gráfica","El buscador algorítmico de contenido"],0],
+["¿En qué año se oficializó la World Wide Web (WWW) y se realizaron las primeras pruebas exitosas de transmisión de datos por fibra óptica a una velocidad de 4 Gbps?",["1989","1990","1991","1993"],1],
+["¿Cuál fue el primer navegador de Internet de consumo masivo lanzado en 1993 que revolucionó la interacción web al integrar gráficos e imágenes con texto en una misma interfaz?",["Internet Explorer","Netscape Navigator","Mosaic","WorldWideWeb"],2],
+["Con la irrupción de las plataformas socio-digitales a principios del siglo XXI, ¿cuál de las siguientes opciones corresponde a la primera red social orientada al ámbito profesional?",["Myspace","Hi5","LinkedIn","Facebook"],2]
+]],
+["Práctica 2",[
+["¿Cuál es la razón principal por la que la tecnología es fundamental en las aulas universitarias actuales?",["Reemplazar totalmente la labor docente en la impartición de contenidos teóricos.","Adaptarse a los nativos digitales que demandan aprendizajes inmersivos, intuitivos y dinámicos.","Garantizar el uso exclusivo de dispositivos móviles dentro de los exámenes presenciales.","Reducir los costos operativos de la infraestructura física universitaria sin cambiar la metodología."],1],
+["¿Qué beneficio de las herramientas digitales permite ajustar los contenidos, el ritmo y las evaluaciones al nivel específico de cada estudiante?",["Flexibilidad en el aprendizaje.","Personalización del aprendizaje y del proceso educativo.","Supervisión de exámenes online.","Actualización constante de contenidos."],1],
+["¿De qué manera las herramientas digitales favorecen el autoaprendizaje en los alumnos universitarios?",["Al vigilarlos permanentemente a través de cámaras web de alta definición.","Al limitar las fuentes de consulta únicamente a la bibliografía básica del curso.","Al despertar su interés y curiosidad para indagar más allá de lo visto en clase y personalizar su estudio.","Al eliminar la necesidad de realizar talleres prácticos y trabajo colaborativo."],2],
+["Antes de adoptar cualquier herramienta tecnológica en una institución educativa, ¿cuál debe ser el primer paso estratégico?",["Adquirir el software de última generación más costoso del mercado.","Capacitar inmediatamente a los estudiantes sin involucrar a los profesores.","Planear en función de los objetivos institucionales, desafíos y oportunidades académicas.","Reemplazar todos los libros de texto físicos por licencias digitales en el primer semestre."],2],
+["Para reducir la brecha digital y optimizar la calidad académica tras la implementación de TICs, ¿qué acción es indispensable?",["Capacitar de forma continua al cuerpo docente en el uso pedagógico de dichas tecnologías.","Automatizar la calificación de los exámenes sin revisión de los profesores.","Exigir que los alumnos aprendan a utilizar las herramientas de manera autónoma sin orientación.","Limitar el uso de herramientas virtuales únicamente a la gestión administrativa."],0],
+["¿Qué plataforma digital permite administrar recursos online, asignar tareas, evaluar de forma interactiva y brindar retroalimentación?",["Simulador de laboratorio virtual.","Sistema de Gestión del Aprendizaje (LMS).","Navegador de proctoring estricto.","Marketplace de libros electrónicos."],1],
+["¿Cuál es la función principal de las soluciones de proctoring impulsadas por inteligencia artificial?",["Crear contenidos dinámicos y presentarlos en formato de videojuego.","Verificar la identidad de los estudiantes y realizar evaluaciones a gran escala de forma segura y confiable.","Diseñar los planes de estudio y las mallas curriculares de las carreras universitarias.","Sustituir las sesiones de tutoría presencial por asistentes virtuales de conversación."],1],
+["¿Qué ventaja competitiva ofrecen los marketplaces y bibliotecas digitales \"listos para usar\" a las instituciones de educación superior?",["Acceso a contenidos de alta calidad, actualizados y certificados profesionales en habilidades demandadas.","Eliminación de la necesidad de evaluar el rendimiento académico de los estudiantes.","Sustitución completa de las horas de práctica profesional en entornos reales.","Garantizar que los alumnos no requieran conexión a internet para estudiar."],0],
+["¿Qué herramienta digital permite a los estudiantes practicar procedimientos y experimentos en entornos interactivos sin riesgos ni costos de infraestructura física?",["Sistema LMS.","Foro de discusión asincrónico.","Laboratorio virtual.","Software de mensajería instantánea."],2],
+["¿Cómo impacta la actualización constante de recursos digitales en la experiencia pedagógica universitaria?",["Asegura que los estudiantes accedan a conocimientos vigentes, relevantes y adaptados a la gamificación.","Obliga a rediseñar los sílabos académicos de manera semanal e imprevista.","Incrementa la rigidez del currículo académico imposibilitando cambios metodológicos.","Evita que los docentes tengan que planificar las actividades de aprendizaje."],0]
+]],
+["Práctica 3",[
+["¿Cuál es el enfoque conceptual primario que la UNESCO otorga a las Tecnologías de la Información y la Comunicación (TIC)?",["Clasificación estadística del sector industrial y de fabricación de hardware.","Vectores estratégicos para la transformación social, educativa y la consecución de los ODS.","Un conjunto exclusivamente instrumental de herramientas para la comunicación interpersonal.","Una red técnica orientada al procesamiento comercial de bienes y materias primas."],1],
+["Según Manuel Castells, ¿qué caracteriza fundamentalmente al \"Espacio de Flujos\" en la Teoría de la Sociedad Red?",["La distribución geográfica estricta basada únicamente en el espacio de lugares físicos.","La sincronización de tareas exclusivamente a través de horarios laborales locales.","La articulación de lugares fijos, redes físicas de comunicación y geometrías de información en tiempo real.","El aislamiento total entre la vida social analógica y los dispositivos móviles."],2],
+["De acuerdo con el modelo de Jan van Dijk, ¿a qué se refiere el \"Segundo Nivel\" de la brecha digital?",["A la falta de acceso físico a computadores e Internet de alta velocidad.","A las disparidades en habilidades digitales y la diversidad de uso entre estratos socioeconómicos.","A la incapacidad de los países para construir cables de fibra óptica transcontinentales.","Al costo económico que representa comprar licencias de software propietario."],1],
+["¿Qué autor conceptualizó en 1973 el advenimiento de la \"Sociedad Postindustrial\", destacando el paso de una economía de bienes a una de servicios basada en el conocimiento teórico?",["Alain Touraine","Daniel Bell","Yoneji Masuda","Nicholas Negroponte"],1],
+["En el marco del Índice de Desarrollo de las TIC (IDI) de la UIT, ¿qué variables comprende el subíndice de \"Capacidades\"?",["Número de celulares fijos e infraestructura de fibra óptica instalada.","Tasa de alfabetización de adultos y matrículas en educación secundaria y terciaria.","Cantidad de empresas de software constituidas por año.","Porcentaje de hogares con Smart TV y consola de videojuegos."],1],
+["¿Cuál es la diferencia fundamental introducida por Nicholas Negroponte en su obra \"Being Digital\"?",["El paso del procesamiento de \"átomos\" (materia física) al procesamiento de \"bits\" (información digital).","La sustitución total de la educación presencial por la inteligencia artificial.","La superioridad de las comunicaciones telefónicas analógicas sobre las digitales.","La eliminación de las redes inalámbricas a favor del cableado coaxial."],0],
+["En el Marco de Competencias Docentes en Materia de TIC (ICT-CFT) de la UNESCO, ¿qué caracteriza al tercer nivel denominado \"Creación de Conocimiento\"?",["El uso elemental de procesadores de texto y correo electrónico para tareas administrativas.","La implementación de proyectos colaborativos sencillos utilizando software comercial.","La co-creación de saberes e innovación social mediante tecnologías emergentes como la IA, IoT y analítica de datos.","La lectura exclusiva de manuales técnicos sobre mantenimiento de hardware."],2],
+["¿Qué organismo internacional delimitó históricamente el concepto de TIC basándose en clasificaciones estadísticas del sector industrial y de servicios?",["UNESCO","OCDE","CEPAL","UIT"],1],
+["¿En qué consiste el \"Tercer Nivel\" de la brecha digital propuesto por la teoría de la Apropiación Social de las Tecnologías?",["En la imposibilidad física de adquirir un teléfono inteligente de última generación.","En las desigualdades para traducir el uso de la tecnología en beneficios concretos de movilidad social, laboral y académica.","En la falta de cobertura de satélites de baja órbita en zonas rurales.","En la brecha de género existente en las carreras de ingeniería de software."],1],
+["¿Cuál es el enfoque central de la estrategia regional eLAC2026 impulsada para América Latina y el Caribe?",["Limitar la conectividad exclusivamente a las zonas urbanas de altos ingresos.","Desplegar redes 5G, digitalizar cadenas productivas y promover la implementación ética de la Inteligencia Artificial.","Reemplazar la fibra óptica por conexiones de banda estrecha.","Prohibir el comercio electrónico transfronterizo en la región."],1]
+]],
+["Práctica 4",[
+["¿Cuál es el objetivo principal planteado por Custódio Cazenga Francisco en el artículo científico publicado en 2025?",["Evaluar el impacto financiero del uso de software libre en las universidades de Luanda.","Reflexionar sobre la educación a distancia, las plataformas digitales y la autonomía discente en el siglo XXI.","Proponer el reemplazo definitivo de las clases presenciales por modelos 100% virtuales en el nivel primario.","Demostrar cuantitativamente la superioridad del aprendizaje presencial frente al remoto."],1],
+["¿Qué tipo de metodología de investigación se empleó para desarrollar dicho estudio científico?",["Una investigación experimental cuantitativa con grupo de control pre/post prueba.","Un estudio de caso correlacional fundamentado exclusivamente en encuestas masivas.","Una revisión narrativa de la literatura de enfoque cualitativo y carácter analítico-bibliográfico.","Un análisis etnográfico mediante observación participante en aulas virtuales universitarias."],2],
+["De acuerdo con el texto, ¿cómo influye el Aprendizaje Basado en Problemas (ABP) al ser integrado en plataformas digitales?",["Fomenta la memorización pasiva mediante la repetición constante de cuestionarios interactivos.","Promueve la resolución de cuestiones reales que estimulan el pensamiento crítico y el análisis en los alumnos.","Aísla a los estudiantes al eliminar la necesidad de trabajo colaborativo en red.","Reduce la participación del alumno al automatizar las evaluaciones y la gestión docente."],1],
+["Según Santos et al. (2020), citado en la fundamentación teórica, ¿cuál es el beneficio central de aplicar la gamificación a través de plataformas digitales?",["Favorecer la motivación de los alumnos y promover un aprendizaje envolvente mediante desafíos y recompensas.","Estandarizar los contenidos académicos para que todos los alumnos respondan el mismo examen final.","Sustituir la mediación del docente por un algoritmo de puntuación estricto.","Garantizar la conectividad a internet de alta velocidad en instituciones con escasos recursos."],0],
+["¿Qué rol desempeñan las plataformas digitales en la personalización de la enseñanza y la accesibilidad educativa según França (2021)?",["Obligan a que todos los estudiantes sigan un ritmo único y predeterminado de aprendizaje.","Permiten adaptar los contenidos a las necesidades educativas particulares y ritmos individuales de cada alumno.","Limitan el acceso a los materiales únicamente a aquellos estudiantes que poseen conocimientos avanzados en informática.","Reemplazan los programas de inclusión educativa por currículos rígidos e inflexibles."],1],
+["Según Portes et al. (2024), ¿de qué manera la utilización de entornos virtuales contribuye directamente al desarrollo de la autonomía discente?",["Imponiendo controles biométricos de asistencia durante las clases sincrónicas.","Ofreciendo la libertad de explorar contenidos y realizar actividades de manera independiente sin supervisión constante.","Eximiendo al alumno de la entrega de evidencias de aprendizaje y tareas académicas.","Restringiendo el acceso a fuentes externas de información no verificadas por la institución."],1],
+["Al implementar la enseñanza remota e híbrida, Oliveira (2023) señala que no basta con adquirir infraestructura tecnológica. ¿Qué aspecto complementario se requiere de manera imperativa?",["Reducir la carga horaria académica asignada a las asignaturas teórico-prácticas.","Un cambio en la forma en que los profesores se relacionan con los alumnos y los contenidos.","Sustituir el cuerpo docente por asistentes virtuales basados en inteligencia artificial.","Eliminar los foros de discusión y enfocarse únicamente en lecturas individuales."],1],
+["En el contexto de la educación del siglo XXI mediada por plataformas digitales, ¿cómo se redefine la función principal del docente?",["Se transforma en un mero transmisor unidireccional de contenidos enciclopédicos.","Pasa a ser un facilitador y guía pedagógico que acompaña la jornada de aprendizaje autónomo del estudiante.","Se convierte en un fiscalizador técnico cuya única tarea es auditar el tiempo de conexión en la plataforma.","Asume la función de creador exclusivo de software educativo sin participación en el aula."],1],
+["De acuerdo con Mattos y Reis (2021) y França (2021), ¿cuáles son dos de los principales desafíos e imponderables institucionales al implementar plataformas digitales?",["La falta de interés de los alumnos por la tecnología y el exceso de financiamiento educativo.","La carencia de infraestructura/soporte técnico adecuado y la resistencia natural de los docentes al cambio de modelo.","La prohibición gubernamental del uso de internet y la saturación de foros pedagógicos.","La escasa oferta de carreras universitarias y la falta de libros de texto impresos."],1],
+["¿Qué observación realiza Oliveira (2023) con respecto a los estudiantes universitarios considerados \"nativos digitales\"?",["Que poseen un dominio nato del pensamiento crítico y la gestión pedagógica autónoma desde el inicio.","Que, aunque estén familiarizados con la tecnología cotidiana, no siempre saben usarla de forma productiva académica sin orientación.","Que rechazan el uso de entornos virtuales para actividades académicas e interactivas.","Que no requieren acompañamiento docente en ningún nivel de la educación superior."],1]
+]]
+];
+const L="ABCD";let cur=0,done=false;
+const $=id=>document.getElementById(id);
+function render(){
+  done=false;$("res").textContent="";
+  $("tabs").innerHTML=P.map((p,i)=>`<button type="button" aria-pressed="${i===cur}" data-i="${i}">${p[0]} (${p[1].length})</button>`).join("");
+  $("quiz").innerHTML=P[cur][1].map((q,i)=>`<fieldset class="q" id="q${i}" style="border:1px solid var(--line);margin:0 0 16px;background:var(--card)"><legend style="display:none">Pregunta ${i+1}</legend><p>${i+1}. ${q[0]}</p>`+
+    q[1].map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}">${L[j]}) ${o}</label>`).join("")+`</fieldset>`).join("");
+}
+function grade(){
+  let ok=0,blank=0;const qs=P[cur][1];
+  qs.forEach((q,i)=>{
+    const box=$("q"+i),sel=box.querySelector("input:checked");
+    box.classList.add("done");
+    box.querySelectorAll("input").forEach(r=>r.disabled=true);
+    const labels=box.querySelectorAll("label");
+    labels[q[2]].classList.add("ok");
+    if(!sel)blank++;
+    else if(+sel.value===q[2])ok++;
+    else labels[+sel.value].classList.add("ko");
+  });
+  done=true;
+  $("res").textContent=`Resultado: ${ok}/${qs.length}`+(blank?` (${blank} sin responder)`:"");
+}
+$("tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b){cur=+b.dataset.i;render();window.scrollTo(0,0)}});
+$("send").onclick=()=>{if(!done){grade();$("res").scrollIntoView({block:"center"})}};
+$("reset").onclick=()=>{render();window.scrollTo(0,0)};
+render();
+</script>
+</body>
+</html>
