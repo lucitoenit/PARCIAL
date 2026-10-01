@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quiz: Parcial Plataformas :) </title>
+<title>Quiz: Tecnología y Educación</title>
 <style>
 :root{--bg:#46178f;--bg2:#2d0f5e;--w:#fff;--r:#e21b3c;--b:#1368ce;--y:#d89e00;--g:#26890c}
 *{box-sizing:border-box}
@@ -36,6 +36,12 @@ h1{font-size:clamp(1.8rem,5vw,2.8rem);margin:0 0 6px}
 .yape h2{margin:0 0 10px;font-size:1.3rem}
 .yape img{width:170px;height:170px;object-fit:contain;background:#fff;border-radius:12px;padding:8px}
 .yape .ph{width:170px;height:170px;margin:0 auto;border:3px dashed #fff8;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.85rem;padding:10px}
+.pop{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.pop.hide{display:none}
+.pop div{position:relative;background:#fff;color:var(--bg2);border-radius:14px;padding:14px;max-width:460px;width:100%;text-align:center}
+.pop img{width:100%;max-height:62vh;object-fit:contain;border-radius:8px;display:block}
+.pop .ph{border:3px dashed var(--bg);border-radius:8px;padding:50px 14px;font-size:.9rem}
+.pop .btn{margin-top:12px;background:var(--bg);color:#fff}
 @media (max-width:560px){.grid{grid-template-columns:1fr}.ans{min-height:64px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -44,7 +50,8 @@ h1{font-size:clamp(1.8rem,5vw,2.8rem);margin:0 0 6px}
 <div class="top"><span id="info">Quiz</span><b id="pts">0</b></div>
 <div class="timer hide" id="tm"><i id="bar"></i></div>
 <main id="app"></main>
-<footer class="yape hide" id="ap"><h2>¡Apóyame XD!</h2><img src="yape.jpeg" alt="QR de Yape para apoyar" onerror="this.outerHTML='<div class=ph>Coloca tu QR como yape.png junto a este archivo</div>'"></footer>
+<footer class="yape hide" id="ap"><h2>¡Apóyame XD!</h2><img src="yape.png" alt="QR de Yape para apoyar" onerror="this.outerHTML='<div class=ph>Coloca tu QR como yape.png junto a este archivo</div>'"></footer>
+<div class="pop" id="pop" role="dialog" aria-modal="true" aria-label="Bienvenida"><div><img src="bts.jpg" alt="Imagen de bienvenida" onerror="this.outerHTML='<p class=ph>Coloca tu imagen como bts.jpg junto a este archivo</p>'"><button class="btn" id="px">Empezar</button></div></div>
 <script>
 const P=[
 ["Práctica 1",[
@@ -100,7 +107,7 @@ let cur,qs,i,score,right,t0,iv,nx,locked;
 const C=["var(--r)","var(--b)","var(--y)","var(--g)"];
 function menu(){
   clearInterval(iv);clearTimeout(nx);tm.classList.add("hide");ap.classList.remove("hide");info.textContent="Quiz";pts.textContent="0";
-  app.innerHTML=`<div class="center"><h1>Quiz: Parcial :) </h1><p>Elige una práctica. Una pregunta a la vez, sin límite de tiempo.</p><div class="menu">`+
+  app.innerHTML=`<div class="center"><h1>Quiz Parcial :)</h1><p>Elige una práctica. Una pregunta a la vez, sin límite de tiempo.</p><div class="menu">`+
   P.map((p,k)=>`<button style="background:${C[k%4]}" data-k="${k}">${SH[k%4]} ${p[0]} · ${p[1].length} preguntas</button>`).join("")+`</div></div>`;
   app.querySelectorAll("button").forEach(b=>b.onclick=()=>start(+b.dataset.k));
 }
@@ -133,6 +140,10 @@ function end(){
   app.innerHTML=`<div class="center"><h1>${pc>=70?"¡Bien hecho!":"Sigue practicando"}</h1><div class="big">${right}/${qs.length}</div><p>${pc}% de aciertos · ${score} puntos</p><div class="menu"><button style="background:var(--g)" id="re">Repetir esta práctica</button><button style="background:var(--b)" id="mn">Elegir otra práctica</button></div></div>`;
   document.getElementById("re").onclick=()=>start(cur);document.getElementById("mn").onclick=menu;
 }
+const pop=document.getElementById("pop"),px=document.getElementById("px");
+const closePop=()=>pop.classList.add("hide");
+px.onclick=closePop;pop.onclick=e=>{if(e.target===pop)closePop()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closePop()});px.focus();
 menu();
 </script>
 </body>
