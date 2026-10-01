@@ -47,7 +47,7 @@ const P=[
 ["¿Cuál fue el primer microprocesador de silicio comercializado en 1971, concebido para ejecutar operaciones bajo una arquitectura tipo Von Neumann?",["IBM System/360","Motorola 68000","Intel 4004","Zilog Z80"],2],
 ["De forma paralela a la conexión de 23 ordenadores en la red ARPANET y la invención del disquete de 5.25 pulgadas en 1971, ¿qué servicio clave de comunicación digital se envió por primera vez?",["Una llamada de voz sobre protocolo IP","El primer correo electrónico","Un archivo de hipertexto indexado","Una señal de televisión digitalizada"],1],
 ["¿Qué desarrollo de direccionamiento lógico de red fue introducido en el año 1983 para simplificar la identificación de los nodos conectados a la red global?",["El primer servidor de nombres de sitios (DNS)","El protocolo de conmutación por fibra óptica","El navegador web con interfaz gráfica","El buscador algorítmico de contenido"],0],
-["¿En qué año se oficializó la World Wide Web (WWW) y se realizaron las primeras pruebas exitosas de transmisión de datos por fibra óptica a una velocidad de 4 Gbps?",["1989","1990","1991","1993"],1],
+["¿En qué año se oficializó la World Wide Web (WWW) y se realizaron las primeras pruebas exitosas de transmisión de datos por fibra óptica a una velocidad de 4 Gbps?",["1989","1990","1991","1993"],2],
 ["¿Cuál fue el primer navegador de Internet de consumo masivo lanzado en 1993 que revolucionó la interacción web al integrar gráficos e imágenes con texto en una misma interfaz?",["Internet Explorer","Netscape Navigator","Mosaic","WorldWideWeb"],2],
 ["Con la irrupción de las plataformas socio-digitales a principios del siglo XXI, ¿cuál de las siguientes opciones corresponde a la primera red social orientada al ámbito profesional?",["Myspace","Hi5","LinkedIn","Facebook"],2]
 ]],
@@ -88,6 +88,7 @@ const P=[
 ["¿Qué observación realiza Oliveira (2023) con respecto a los estudiantes universitarios considerados \"nativos digitales\"?",["Que poseen un dominio nato del pensamiento crítico y la gestión pedagógica autónoma desde el inicio.","Que, aunque estén familiarizados con la tecnología cotidiana, no siempre saben usarla de forma productiva académica sin orientación.","Que rechazan el uso de entornos virtuales para actividades académicas e interactivas.","Que no requieren acompañamiento docente en ningún nivel de la educación superior."],1]
 ]]
 ];
+function mix(q){const c=q[1][q[2]];for(let k=q[1].length-1;k>0;k--){const r=Math.floor(Math.random()*(k+1));[q[1][k],q[1][r]]=[q[1][r],q[1][k]]}q[2]=q[1].indexOf(c)}
 const SH=["▲","◆","●","■"],SEC=20,AUTO=2600;
 const app=document.getElementById("app"),info=document.getElementById("info"),pts=document.getElementById("pts"),tm=document.getElementById("tm"),bar=document.getElementById("bar");
 let cur,qs,i,score,right,t0,iv,nx,locked;
@@ -100,7 +101,7 @@ function menu(){
 }
 function start(k){cur=k;qs=P[k][1];i=0;score=0;right=0;pts.textContent=0;show()}
 function show(){
-  const q=qs[i];locked=false;
+  const q=qs[i];mix(q);locked=false;
   info.textContent=`${P[cur][0]} · ${i+1}/${qs.length}`;
   app.innerHTML=`<div class="qbox" id="qb"></div><div class="grid">`+
    q[1].map((o,j)=>`<button class="ans a${j}" data-j="${j}"><span class="s">${SH[j]}</span><span>${o}</span></button>`).join("")+
