@@ -95,7 +95,7 @@ let cur,qs,i,score,right,t0,iv,nx,locked;
 const C=["var(--r)","var(--b)","var(--y)","var(--g)"];
 function menu(){
   clearInterval(iv);clearTimeout(nx);tm.classList.add("hide");info.textContent="Quiz";pts.textContent="0";
-  app.innerHTML=`<div class="center"><h1>Tecnología y Educación</h1><p>Elige una práctica. Una pregunta a la vez, ${SEC} segundos cada una.</p><div class="menu">`+
+  app.innerHTML=`<div class="center"><h1>Tecnología y Educación</h1><p>Elige una práctica. Una pregunta a la vez, sin límite de tiempo.</p><div class="menu">`+
   P.map((p,k)=>`<button style="background:${C[k%4]}" data-k="${k}">${SH[k%4]} ${p[0]} · ${p[1].length} preguntas</button>`).join("")+`</div></div>`;
   app.querySelectorAll("button").forEach(b=>b.onclick=()=>start(+b.dataset.k));
 }
@@ -108,22 +108,16 @@ function show(){
    `</div><div class="fb" id="fb"></div>`;
   document.getElementById("qb").textContent=q[0];
   app.querySelectorAll(".ans").forEach(b=>b.onclick=()=>pick(+b.dataset.j));
-  tm.classList.remove("hide");t0=Date.now();bar.style.width="100%";
-  clearInterval(iv);iv=setInterval(()=>{
-    const left=SEC*1000-(Date.now()-t0);
-    bar.style.width=Math.max(0,left/(SEC*10))+"%";
-    if(left<=0)pick(-1);
-  },100);
 }
 function pick(j){
   if(locked)return;locked=true;clearInterval(iv);
-  const q=qs[i],ok=j===q[2],el=Date.now()-t0;
+  const q=qs[i],ok=j===q[2];
   let gain=0;
-  if(ok){gain=Math.round(1000*(1-(el/(SEC*1000))/2));right++;score+=gain;pts.textContent=score}
+  if(ok){gain=1000;right++;score+=gain;pts.textContent=score}
   app.querySelectorAll(".ans").forEach((b,k)=>{b.disabled=true;if(k===q[2])b.classList.add("right");else b.classList.add("dim")});
   if(!ok&&j>=0)app.querySelectorAll(".ans")[j].style.opacity=".55";
   const last=i===qs.length-1;
-  document.getElementById("fb").innerHTML=`<span>${ok?"✔ ¡Correcto! +"+gain:j<0?"⏱ Se acabó el tiempo":"✘ Incorrecto"}</span><button class="btn" id="nx">${last?"Ver resultado":"Siguiente"}</button>`;
+  document.getElementById("fb").innerHTML=`<span>${ok?"✔ ¡Correcto! +"+gain:"✘ Incorrecto"}</span><button class="btn" id="nx">${last?"Ver resultado":"Siguiente"}</button>`;
   const go=()=>{clearTimeout(nx);last?end():(i++,show())};
   document.getElementById("nx").onclick=go;document.getElementById("nx").focus();
   nx=setTimeout(go,AUTO);
