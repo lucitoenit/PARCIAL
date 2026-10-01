@@ -3,48 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Test: Tecnología y Educación</title>
+<title>Quiz: Tecnología y Educación</title>
 <style>
-:root{--bg:#eef2f4;--card:#fff;--ink:#15262e;--mute:#5b6d75;--line:#cfd9de;--acc:#0b6e74;--ok:#1e7a46;--okbg:#e2f3e9;--ko:#b3261e;--kobg:#fbe7e5}
-@media (prefers-color-scheme:dark){:root{--bg:#0f1b20;--card:#16272e;--ink:#e6eef1;--mute:#98aab2;--line:#2a3f48;--acc:#4fc3c9;--ok:#6fd49a;--okbg:#14352399;--ko:#ff9a92;--kobg:#4a1d1a99}}
+:root{--bg:#46178f;--bg2:#2d0f5e;--w:#fff;--r:#e21b3c;--b:#1368ce;--y:#d89e00;--g:#26890c}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Georgia,"Times New Roman",serif}
-main{max-width:760px;margin:0 auto;padding:24px 16px 80px}
-h1{font-size:1.7rem;margin:.2em 0 .1em}
-.sub{color:var(--mute);margin:0 0 20px;font-family:system-ui,sans-serif;font-size:.95rem}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;font-family:system-ui,sans-serif}
-.tabs button{flex:1 1 140px;padding:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;cursor:pointer;font-size:.95rem}
-.tabs button[aria-pressed=true]{background:var(--acc);color:#fff;border-color:var(--acc)}
-.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
-.q p{margin:0 0 12px;font-weight:600}
-label{display:block;padding:10px 12px;margin:6px 0;border:1px solid var(--line);border-radius:8px;cursor:pointer;font-family:system-ui,sans-serif;font-size:.95rem}
-label:hover{border-color:var(--acc)}
-input{margin-right:8px;accent-color:var(--acc)}
-.q.done label{cursor:default}
-label.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok);font-weight:600}
-label.ko{background:var(--kobg);border-color:var(--ko);color:var(--ko)}
-.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-family:system-ui,sans-serif}
-.bar button{padding:12px 22px;border-radius:8px;border:0;font-size:1rem;cursor:pointer}
-#send{background:var(--acc);color:#fff}
-#reset{background:transparent;border:1px solid var(--line);color:var(--ink)}
-#res{font-weight:700;font-size:1.1rem}
-button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--w);font:600 18px/1.4 system-ui,"Segoe UI",Arial,sans-serif;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--bg2);font-size:.95rem}
+.top b{background:#fff;color:var(--bg2);border-radius:6px;padding:4px 12px}
+.timer{height:8px;background:#ffffff33}
+.timer i{display:block;height:100%;width:100%;background:#fff;transition:width .1s linear}
+main{flex:1;display:flex;flex-direction:column;padding:16px;max-width:980px;width:100%;margin:0 auto}
+.qbox{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;background:#fff;color:#222;border-radius:10px;padding:20px;font-size:clamp(1.05rem,2.6vw,1.6rem);margin-bottom:14px;min-height:130px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ans{display:flex;gap:12px;align-items:center;min-height:90px;padding:14px 16px;border:0;border-radius:8px;color:#fff;font:inherit;font-size:clamp(.9rem,2.1vw,1.2rem);text-align:left;cursor:pointer;box-shadow:0 5px 0 #0004;transition:transform .08s}
+.ans:active{transform:translateY(3px);box-shadow:0 2px 0 #0004}
+.ans span.s{font-size:1.9rem;flex:none;width:34px;text-align:center}
+.a0{background:var(--r)}.a1{background:var(--b)}.a2{background:var(--y)}.a3{background:var(--g)}
+.ans.dim{opacity:.3;box-shadow:none}
+.ans.right{outline:5px solid #fff}
+.ans:disabled{cursor:default}
+.ans:focus-visible,.menu button:focus-visible,.btn:focus-visible{outline:4px solid #fff;outline-offset:3px}
+.fb{margin-top:14px;min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:1.15rem}
+.btn{background:#fff;color:var(--bg2);border:0;border-radius:8px;padding:12px 26px;font:inherit;font-weight:800;cursor:pointer;box-shadow:0 4px 0 #0004}
+.center{margin:auto;text-align:center;max-width:560px;width:100%}
+h1{font-size:clamp(1.8rem,5vw,2.8rem);margin:0 0 6px}
+.menu{display:grid;gap:12px;margin-top:22px}
+.menu button{padding:18px;border:0;border-radius:8px;font:inherit;font-size:1.1rem;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 5px 0 #0004}
+.big{font-size:3.4rem;margin:10px 0}
+.hide{display:none!important}
+@media (max-width:560px){.grid{grid-template-columns:1fr}.ans{min-height:64px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<main>
-<h1>Test de práctica</h1>
-<p class="sub">Elige una práctica, responde y pulsa «Corregir».</p>
-<div class="tabs" id="tabs" role="group" aria-label="Prácticas"></div>
-<form id="quiz" onsubmit="return false"></form>
-<div class="bar">
-<button id="send" type="button">Corregir</button>
-<button id="reset" type="button">Reiniciar</button>
-<span id="res" aria-live="polite"></span>
-</div>
-</main>
+<div class="top"><span id="info">Quiz</span><b id="pts">0</b></div>
+<div class="timer hide" id="tm"><i id="bar"></i></div>
+<main id="app"></main>
 <script>
-// Formato: [pregunta, [opciones A-D], índice de la correcta (0=A)]
 const P=[
 ["Práctica 1",[
 ["¿En qué año Alan Turing diseñó y construyó el ordenador Colossus, una plataforma electromagnética fundamental para el desciframiento de códigos secretos durante la Segunda Guerra Mundial?",["1941","1943","1967","1971"],1],
@@ -92,33 +88,52 @@ const P=[
 ["¿Qué observación realiza Oliveira (2023) con respecto a los estudiantes universitarios considerados \"nativos digitales\"?",["Que poseen un dominio nato del pensamiento crítico y la gestión pedagógica autónoma desde el inicio.","Que, aunque estén familiarizados con la tecnología cotidiana, no siempre saben usarla de forma productiva académica sin orientación.","Que rechazan el uso de entornos virtuales para actividades académicas e interactivas.","Que no requieren acompañamiento docente en ningún nivel de la educación superior."],1]
 ]]
 ];
-const L="ABCD";let cur=0,done=false;
-const $=id=>document.getElementById(id);
-function render(){
-  done=false;$("res").textContent="";
-  $("tabs").innerHTML=P.map((p,i)=>`<button type="button" aria-pressed="${i===cur}" data-i="${i}">${p[0]} (${p[1].length})</button>`).join("");
-  $("quiz").innerHTML=P[cur][1].map((q,i)=>`<fieldset class="q" id="q${i}" style="border:1px solid var(--line);margin:0 0 16px;background:var(--card)"><legend style="display:none">Pregunta ${i+1}</legend><p>${i+1}. ${q[0]}</p>`+
-    q[1].map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}">${L[j]}) ${o}</label>`).join("")+`</fieldset>`).join("");
+const SH=["▲","◆","●","■"],SEC=20,AUTO=2600;
+const app=document.getElementById("app"),info=document.getElementById("info"),pts=document.getElementById("pts"),tm=document.getElementById("tm"),bar=document.getElementById("bar");
+let cur,qs,i,score,right,t0,iv,nx,locked;
+const C=["var(--r)","var(--b)","var(--y)","var(--g)"];
+function menu(){
+  clearInterval(iv);clearTimeout(nx);tm.classList.add("hide");info.textContent="Quiz";pts.textContent="0";
+  app.innerHTML=`<div class="center"><h1>Tecnología y Educación</h1><p>Elige una práctica. Una pregunta a la vez, ${SEC} segundos cada una.</p><div class="menu">`+
+  P.map((p,k)=>`<button style="background:${C[k%4]}" data-k="${k}">${SH[k%4]} ${p[0]} · ${p[1].length} preguntas</button>`).join("")+`</div></div>`;
+  app.querySelectorAll("button").forEach(b=>b.onclick=()=>start(+b.dataset.k));
 }
-function grade(){
-  let ok=0,blank=0;const qs=P[cur][1];
-  qs.forEach((q,i)=>{
-    const box=$("q"+i),sel=box.querySelector("input:checked");
-    box.classList.add("done");
-    box.querySelectorAll("input").forEach(r=>r.disabled=true);
-    const labels=box.querySelectorAll("label");
-    labels[q[2]].classList.add("ok");
-    if(!sel)blank++;
-    else if(+sel.value===q[2])ok++;
-    else labels[+sel.value].classList.add("ko");
-  });
-  done=true;
-  $("res").textContent=`Resultado: ${ok}/${qs.length}`+(blank?` (${blank} sin responder)`:"");
+function start(k){cur=k;qs=P[k][1];i=0;score=0;right=0;pts.textContent=0;show()}
+function show(){
+  const q=qs[i];locked=false;
+  info.textContent=`${P[cur][0]} · ${i+1}/${qs.length}`;
+  app.innerHTML=`<div class="qbox" id="qb"></div><div class="grid">`+
+   q[1].map((o,j)=>`<button class="ans a${j}" data-j="${j}"><span class="s">${SH[j]}</span><span>${o}</span></button>`).join("")+
+   `</div><div class="fb" id="fb"></div>`;
+  document.getElementById("qb").textContent=q[0];
+  app.querySelectorAll(".ans").forEach(b=>b.onclick=()=>pick(+b.dataset.j));
+  tm.classList.remove("hide");t0=Date.now();bar.style.width="100%";
+  clearInterval(iv);iv=setInterval(()=>{
+    const left=SEC*1000-(Date.now()-t0);
+    bar.style.width=Math.max(0,left/(SEC*10))+"%";
+    if(left<=0)pick(-1);
+  },100);
 }
-$("tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b){cur=+b.dataset.i;render();window.scrollTo(0,0)}});
-$("send").onclick=()=>{if(!done){grade();$("res").scrollIntoView({block:"center"})}};
-$("reset").onclick=()=>{render();window.scrollTo(0,0)};
-render();
+function pick(j){
+  if(locked)return;locked=true;clearInterval(iv);
+  const q=qs[i],ok=j===q[2],el=Date.now()-t0;
+  let gain=0;
+  if(ok){gain=Math.round(1000*(1-(el/(SEC*1000))/2));right++;score+=gain;pts.textContent=score}
+  app.querySelectorAll(".ans").forEach((b,k)=>{b.disabled=true;if(k===q[2])b.classList.add("right");else b.classList.add("dim")});
+  if(!ok&&j>=0)app.querySelectorAll(".ans")[j].style.opacity=".55";
+  const last=i===qs.length-1;
+  document.getElementById("fb").innerHTML=`<span>${ok?"✔ ¡Correcto! +"+gain:j<0?"⏱ Se acabó el tiempo":"✘ Incorrecto"}</span><button class="btn" id="nx">${last?"Ver resultado":"Siguiente"}</button>`;
+  const go=()=>{clearTimeout(nx);last?end():(i++,show())};
+  document.getElementById("nx").onclick=go;document.getElementById("nx").focus();
+  nx=setTimeout(go,AUTO);
+}
+function end(){
+  tm.classList.add("hide");info.textContent=P[cur][0]+" · fin";
+  const pc=Math.round(right/qs.length*100);
+  app.innerHTML=`<div class="center"><h1>${pc>=70?"¡Bien hecho!":"Sigue practicando"}</h1><div class="big">${right}/${qs.length}</div><p>${pc}% de aciertos · ${score} puntos</p><div class="menu"><button style="background:var(--g)" id="re">Repetir esta práctica</button><button style="background:var(--b)" id="mn">Elegir otra práctica</button></div></div>`;
+  document.getElementById("re").onclick=()=>start(cur);document.getElementById("mn").onclick=menu;
+}
+menu();
 </script>
 </body>
 </html>
